@@ -24,7 +24,10 @@
         "laravel": {
             "providers": [
                 "RMS\\PDF\\PDFServiceProvider"
-            ]
+            ],
+            "aliases": {
+                "PDF": "RMS\\PDF\\PDFFacade"
+            }
         }
     },
     "minimum-stability": "stable"
