@@ -3,6 +3,7 @@
 namespace RMS\PDF;
 
 use Mpdf\Mpdf;
+use Illuminate\Support\Facades\View;
 
 class PDF
 {
@@ -18,8 +19,10 @@ class PDF
         'margin_bottom' => 10,
         'fontdata' => [
             'vazir' => [
-                'R' => 'Vazir.ttf', // فایل فونت معمولی
-                'B' => 'Vazir-Bold.ttf', // فایل فونت بولد (اختیاری)
+                'R' => 'Vazir.ttf',
+                'B' => 'Vazir-Bold.ttf',
+                'useOTL' => 0xFF, // فعال کردن OpenType Layout
+                'useKashida' => 75, // تنظیم کشیدگی برای متون فارسی
             ],
         ],
     ];
@@ -28,12 +31,32 @@ class PDF
     {
         $this->config['fontDir'] = [public_path('vendor/rms-pdf/fonts')];
         $this->mpdf = new Mpdf($this->config);
+        $this->mpdf->autoScriptToLang = true;
+        $this->mpdf->baseScript = 1;
+        $this->mpdf->autoLangToFont = true;
+        $this->mpdf->useAdobeCJK = false;
+    }
+
+    public function loadTheme($theme, $data = []): self
+    {
+        $viewPath = 'vendor.rms-pdf.' . str_replace('/', '.', $theme);
+        if (View::exists($viewPath)) {
+            $html = View::make($viewPath, $data)->render();
+        } else {
+            $html = is_file($theme) ? file_get_contents($theme) : $theme;
+        }
+        $this->mpdf->WriteHTML($html);
+        return $this;
     }
 
     public function setFont($font): self
     {
         $this->config['default_font'] = $font;
         $this->mpdf = new Mpdf($this->config);
+        $this->mpdf->autoScriptToLang = true;
+        $this->mpdf->baseScript = 1;
+        $this->mpdf->autoLangToFont = true;
+        $this->mpdf->useAdobeCJK = false;
         return $this;
     }
 
@@ -41,6 +64,10 @@ class PDF
     {
         $this->config['format'] = $format;
         $this->mpdf = new Mpdf($this->config);
+        $this->mpdf->autoScriptToLang = true;
+        $this->mpdf->baseScript = 1;
+        $this->mpdf->autoLangToFont = true;
+        $this->mpdf->useAdobeCJK = false;
         return $this;
     }
 
@@ -48,6 +75,10 @@ class PDF
     {
         $this->config['orientation'] = $orientation;
         $this->mpdf = new Mpdf($this->config);
+        $this->mpdf->autoScriptToLang = true;
+        $this->mpdf->baseScript = 1;
+        $this->mpdf->autoLangToFont = true;
+        $this->mpdf->useAdobeCJK = false;
         return $this;
     }
 
@@ -58,12 +89,20 @@ class PDF
         $this->config['margin_top'] = $top;
         $this->config['margin_bottom'] = $bottom;
         $this->mpdf = new Mpdf($this->config);
+        $this->mpdf->autoScriptToLang = true;
+        $this->mpdf->baseScript = 1;
+        $this->mpdf->autoLangToFont = true;
+        $this->mpdf->useAdobeCJK = false;
         return $this;
     }
 
     public function enableRTL(): self
     {
         $this->mpdf->SetDirectionality('rtl');
+        $this->mpdf->autoScriptToLang = true;
+        $this->mpdf->baseScript = 1;
+        $this->mpdf->autoLangToFont = true;
+        $this->mpdf->useAdobeCJK = false;
         return $this;
     }
 
