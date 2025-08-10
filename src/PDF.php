@@ -16,10 +16,17 @@ class PDF
         'margin_right' => 10,
         'margin_top' => 10,
         'margin_bottom' => 10,
+        'fontdata' => [
+            'vazir' => [
+                'R' => 'Vazir.ttf', // فایل فونت معمولی
+                'B' => 'Vazir-Bold.ttf', // فایل فونت بولد (اختیاری)
+            ],
+        ],
     ];
 
     public function __construct()
     {
+        $this->config['fontDir'] = [public_path('vendor/rms-pdf/fonts')];
         $this->mpdf = new Mpdf($this->config);
     }
 
