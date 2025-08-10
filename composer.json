@@ -1,0 +1,31 @@
+{
+    "name": "rmscms/pdf",
+    "description": "A Pdf package for Laravel applications",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "sharif",
+            "email": "msharif.ahrari@gmail.com"
+        }
+    ],
+    "require": {
+        "mpdf/mpdf": "^8.2"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^9.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "RMS\\PDF\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "RMS\\PDF\\PDFServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "stable"
+}
