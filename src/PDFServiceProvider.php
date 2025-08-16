@@ -18,10 +18,13 @@ class PDFServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__ . '/../fonts' => public_path('vendor/rms-pdf/fonts'),
         ], 'rms-pdf-fonts');
-
         $this->publishes([
             __DIR__ . '/../resources/views' => resource_path('views/vendor/rms-pdf'),
         ], 'rms-pdf-views');
+
+        $this->publishes([
+            __DIR__ . '/../config/rms-pdf.php' => config_path('rms-pdf.php'),
+        ], 'rms-pdf-config');
 
         $this->loadRoutesFrom(__DIR__ . '/../routes/pdf.php');
     }

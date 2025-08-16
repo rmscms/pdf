@@ -8,27 +8,29 @@ use Illuminate\Support\Facades\View;
 class PDF
 {
     protected $mpdf;
-    protected $config = [
-        'mode' => 'utf-8',
-        'format' => 'A4',
-        'default_font' => 'vazir',
-        'orientation' => 'P',
-        'margin_left' => 10,
-        'margin_right' => 10,
-        'margin_top' => 10,
-        'margin_bottom' => 10,
-        'fontdata' => [
-            'vazir' => [
-                'R' => 'Vazir.ttf',
-                'B' => 'Vazir-Bold.ttf',
-                'useOTL' => 0xFF, // فعال کردن OpenType Layout
-                'useKashida' => 75, // تنظیم کشیدگی برای متون فارسی
-            ],
-        ],
-    ];
+    protected $config;
 
     public function __construct()
     {
+        $this->config = [
+            'mode' => 'utf-8',
+            'format' => 'A4',
+            'default_font' => config('rms-pdf.default_font', 'vazir'),
+            'orientation' => 'P',
+            'margin_left' => 10,
+            'margin_right' => 10,
+            'margin_top' => 10,
+            'margin_bottom' => 10,
+            'fontdata' => config('rms-pdf.fontdata', [
+                'vazir' => [
+                    'R' => 'Vazir.ttf',
+                    'B' => 'Vazir-Bold.ttf',
+                    'useOTL' => 0xFF,
+                    'useKashida' => 75,
+                ],
+            ]),
+        ];
+
         $this->config['fontDir'] = [public_path('vendor/rms-pdf/fonts')];
         $this->mpdf = new Mpdf($this->config);
         $this->mpdf->autoScriptToLang = true;
@@ -37,8 +39,9 @@ class PDF
         $this->mpdf->useAdobeCJK = false;
     }
 
-    public function loadTheme($theme, $data = []): self
+    public function loadTheme($theme = null, $data = []): self
     {
+        $theme = $theme ?? config('rms-pdf.default_theme', 'elegant');
         $viewPath = 'vendor.rms-pdf.' . str_replace('/', '.', $theme);
         if (View::exists($viewPath)) {
             $html = View::make($viewPath, $data)->render();
